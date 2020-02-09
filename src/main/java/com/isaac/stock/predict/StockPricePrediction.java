@@ -29,6 +29,9 @@ public class StockPricePrediction {
 
     private static int exampleLength = 22; // time series length, assume 22 working days per month
 
+    public static void main2 (String[] args){
+        log.info("Create dataSet iterator...");
+    }
     public static void main (String[] args) throws IOException {
         String file = new ClassPathResource("prices-split-adjusted.csv").getFile().getAbsolutePath();
         String symbol = "GOOG"; // stock name

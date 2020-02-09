@@ -12,6 +12,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.learning.config.RmsProp;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 /**
@@ -20,25 +21,37 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
  */
 public class RecurrentNets {
 	
-	private static final double learningRate = 0.05;
+	private static final double learningRate = 0.00005;
 	private static final int iterations = 1;
 	private static final int seed = 12345;
 
-    private static final int lstmLayer1Size = 256;
-    private static final int lstmLayer2Size = 256;
+    private static final int lstmLayer1Size = 128;
+    private static final int lstmLayer2Size = 128;
     private static final int denseLayerSize = 32;
-    private static final double dropoutRatio = 0.2;
+//    private static final double dropoutRatio = 0.2;
     private static final int truncatedBPTTLength = 22;
 
+
+
     public static MultiLayerNetwork buildLstmNetworks(int nIn, int nOut) {
+
+
+        // some common parameters
+//        NeuralNetConfiguration.Builder builder = new NeuralNetConfiguration.Builder();
+//        builder.seed(123);
+//        builder.biasInit(0);
+//        builder.miniBatch(false);
+//        builder.updater(new RmsProp(0.001));
+//        builder.weightInit(WeightInit.XAVIER);
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
-                .iterations(iterations)
-                .learningRate(learningRate)
+//                .iterations(iterations)
+//                .learningRate(learningRate)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .weightInit(WeightInit.XAVIER)
-                .updater(Updater.RMSPROP)
-                .regularization(true)
+//                .updater(Updater.RMSPROP)
+                .updater(new RmsProp(learningRate))
+//                .regularization(true)
                 .l2(1e-4)
                 .list()
                 .layer(0, new GravesLSTM.Builder()
@@ -46,14 +59,14 @@ public class RecurrentNets {
                         .nOut(lstmLayer1Size)
                         .activation(Activation.TANH)
                         .gateActivationFunction(Activation.HARDSIGMOID)
-                        .dropOut(dropoutRatio)
+//                        .dropOut(dropoutRatio)
                         .build())
                 .layer(1, new GravesLSTM.Builder()
                         .nIn(lstmLayer1Size)
                         .nOut(lstmLayer2Size)
                         .activation(Activation.TANH)
                         .gateActivationFunction(Activation.HARDSIGMOID)
-                        .dropOut(dropoutRatio)
+//                        .dropOut(dropoutRatio)
                         .build())
                 .layer(2, new DenseLayer.Builder()
                 		.nIn(lstmLayer2Size)
@@ -69,8 +82,8 @@ public class RecurrentNets {
                 .backpropType(BackpropType.TruncatedBPTT)
                 .tBPTTForwardLength(truncatedBPTTLength)
                 .tBPTTBackwardLength(truncatedBPTTLength)
-                .pretrain(false)
-                .backprop(true)
+//                .pretrain(false)
+//                .backprop(true)
                 .build();
 
         MultiLayerNetwork net = new MultiLayerNetwork(conf);

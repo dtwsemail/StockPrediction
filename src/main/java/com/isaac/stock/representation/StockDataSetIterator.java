@@ -79,8 +79,10 @@ public class StockDataSetIterator implements DataSetIterator {
         int actualMiniBatchSize = Math.min(num, exampleStartOffsets.size());
         INDArray input = Nd4j.create(new int[] {actualMiniBatchSize, VECTOR_SIZE, exampleLength}, 'f');
         INDArray label;
-        if (category.equals(PriceCategory.ALL)) label = Nd4j.create(new int[] {actualMiniBatchSize, VECTOR_SIZE, exampleLength}, 'f');
-        else label = Nd4j.create(new int[] {actualMiniBatchSize, predictLength, exampleLength}, 'f');
+        if (category.equals(PriceCategory.ALL))
+            label = Nd4j.create(new int[] {actualMiniBatchSize, VECTOR_SIZE, exampleLength}, 'f');
+        else
+            label = Nd4j.create(new int[] {actualMiniBatchSize, predictLength, exampleLength}, 'f');
         for (int index = 0; index < actualMiniBatchSize; index++) {
             int startIdx = exampleStartOffsets.removeFirst();
             int endIdx = startIdx + exampleLength;
@@ -123,7 +125,8 @@ public class StockDataSetIterator implements DataSetIterator {
         return value;
     }
 
-    @Override public int totalExamples() { return train.size() - exampleLength - predictLength; }
+//    @Override
+    public int totalExamples() { return train.size() - exampleLength - predictLength; }
 
     @Override public int inputColumns() { return VECTOR_SIZE; }
 
@@ -140,9 +143,11 @@ public class StockDataSetIterator implements DataSetIterator {
 
     @Override public int batch() { return miniBatchSize; }
 
-    @Override public int cursor() { return totalExamples() - exampleStartOffsets.size(); }
+//    @Override
+    public int cursor() { return totalExamples() - exampleStartOffsets.size(); }
 
-    @Override public int numExamples() { return totalExamples(); }
+//    @Override
+    public int numExamples() { return totalExamples(); }
 
     @Override public void setPreProcessor(DataSetPreProcessor dataSetPreProcessor) {
         throw new UnsupportedOperationException("Not Implemented");

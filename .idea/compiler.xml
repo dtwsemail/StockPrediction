@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="prediction" />
         <module name="StockPrediction" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="prediction" target="1.8" />
       <module name="StockPrediction" target="1.8" />
     </bytecodeTargetLevel>
   </component>
