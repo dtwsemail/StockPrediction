@@ -35,8 +35,8 @@ public class StockPricePrediction {
     }
 
     public static void main(String[] args) throws IOException {
-        String file = new ClassPathResource("prices-split-adjusted.csv").getFile().getAbsolutePath();
-        String symbol = "GOOG"; // stock name
+        String file = new ClassPathResource("000651.SZ_d_2.csv").getFile().getAbsolutePath();
+        String symbol = "00651"; // stock name
         int batchSize = 64; // mini-batch size
         double splitRatio = 0.9; // 90% for training, 10% for testing
         int epochs = 100; // training epochs
@@ -60,7 +60,11 @@ public class StockPricePrediction {
         }
 
         log.info("Saving model...");
-        File locationToSave = new File("src/main/resources/StockPriceLSTM_".concat(String.valueOf(category)).concat(".zip"));
+        File path = new File("src/main/resources/"+symbol);
+        if(!path.exists()){
+            path.mkdirs();
+        }
+        File locationToSave = new File("src/main/resources/"+symbol+"/StockPriceLSTM_".concat(String.valueOf(category)).concat(".zip"));
         // saveUpdater: i.e., the state for Momentum, RMSProp, Adagrad etc. Save this to train your network more in the future
         ModelSerializer.writeModel(net, locationToSave, true);
 
@@ -92,7 +96,11 @@ public class StockPricePrediction {
         }
         log.info("Print out Predictions and Actual Values...");
         log.info("Predict,Actual");
-        for (int i = 0; i < predicts.length; i++) log.info(predicts[i] + "," + actuals[i]);
+        for (int i = 0; i < predicts.length; i++) {
+            double gap = (predicts[i]-actuals[i])/actuals[i] *100;
+            log.info(predicts[i] + "," + actuals[i]+"," + gap +"%" );
+        }
+
         log.info("Plot...");
         PlotUtil.plot(predicts, actuals, String.valueOf(category));
     }

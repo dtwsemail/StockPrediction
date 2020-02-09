@@ -12,6 +12,7 @@ import org.nd4j.linalg.factory.Nd4j;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -303,24 +304,37 @@ public class StockDataSetIterator implements DataSetIterator {
     private List<StockData> readStockDataFromFile(String filename, String symbol) {
         List<StockData> stockDataList = new ArrayList<>();
         try {
-            for (int i = 0; i < maxArray.length; i++) { // initialize max and min arrays
-                maxArray[i] = Double.MIN_VALUE;
-                minArray[i] = Double.MAX_VALUE;
-            }
-            List<String[]> list = new CSVReader(new FileReader(filename)).readAll(); // load all elements in a list
+
+            List<String[]> list = new CSVReader(new FileReader(filename), ',', '"', '\\', 200).readAll(); // load all elements in a list
             for (String[] arr : list) {
-                if (!arr[1].equals(symbol)) continue;
-                double[] nums = new double[VECTOR_SIZE];
-                for (int i = 0; i < arr.length - 2; i++) {
-                    nums[i] = Double.valueOf(arr[i + 2]);
-                    if (nums[i] > maxArray[i]) maxArray[i] = nums[i];
-                    if (nums[i] < minArray[i]) minArray[i] = nums[i];
+                if (!arr[1].contains(symbol)) continue;
+//                stockDataList.add(new StockData(arr[0], arr[1], nums[0], nums[1], nums[2], nums[3], nums[4]));
+                BaoStaockData baoStaockData = BaoStaockData.parse(arr);
+                if(baoStaockData.getVolume()>0){
+                    stockDataList.add(baoStaockData);
                 }
-                stockDataList.add(new StockData(arr[0], arr[1], nums[0], nums[1], nums[2], nums[3], nums[4]));
             }
+            initMaxAndMinArray(stockDataList);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return stockDataList;
+    }
+
+    private void initMaxAndMinArray(List<StockData> stockDataList) {
+//            double open, double close, double low, double high, double volume
+        maxArray[0] = stockDataList.stream().parallel().map(data -> data.getOpen()).max(Double::compare).get();
+        minArray[0] = stockDataList.stream().parallel().map(data -> data.getOpen()).min(Double::compare).get();
+        maxArray[1] = stockDataList.stream().parallel().map(data -> data.getClose()).max(Double::compare).get();
+        minArray[1] = stockDataList.stream().parallel().map(data -> data.getClose()).min(Double::compare).get();
+        maxArray[2] = stockDataList.stream().parallel().map(data -> data.getLow()).max(Double::compare).get();
+        minArray[2] = stockDataList.stream().parallel().map(data -> data.getLow()).min(Double::compare).get();
+        maxArray[3] = stockDataList.stream().parallel().map(data -> data.getHigh()).max(Double::compare).get();
+        minArray[3] = stockDataList.stream().parallel().map(data -> data.getHigh()).min(Double::compare).get();
+        maxArray[4] = stockDataList.stream().parallel().map(data -> data.getVolume()).max(Double::compare).get();
+        minArray[4] = stockDataList.stream().parallel().map(data -> data.getVolume()).min(Double::compare).get();
+        System.out.println("maxArray:" + Arrays.toString(maxArray));
+        System.out.println("minArray:" + Arrays.toString(minArray));
+
     }
 }

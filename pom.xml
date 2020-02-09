@@ -42,6 +42,11 @@
             <artifactId>datavec-api</artifactId>
             <version>${deeplearning4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-ui</artifactId>
+            <version>${deeplearning4j.version}</version>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>org.datavec</groupId>-->
             <!--<artifactId>datavec-dataframe</artifactId>-->
