@@ -35,11 +35,11 @@ public class StockPricePrediction {
     }
 
     public static void main(String[] args) throws IOException {
-        String file = new ClassPathResource("000651.SZ_d_2.csv").getFile().getAbsolutePath();
+        String file = new ClassPathResource("000651.SZ_d_3.csv").getFile().getAbsolutePath();
         String symbol = "00651"; // stock name
         int batchSize = 64; // mini-batch size
         double splitRatio = 0.9; // 90% for training, 10% for testing
-        int epochs = 100; // training epochs
+        int epochs = 30; // training epochs
 
         log.info("Create dataSet iterator...");
         PriceCategory category = PriceCategory.CLOSE; // CLOSE: predict close price

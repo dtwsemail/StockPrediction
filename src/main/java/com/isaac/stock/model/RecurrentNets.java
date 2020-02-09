@@ -28,7 +28,7 @@ import java.io.File;
  */
 public class RecurrentNets {
 	
-	private static final double learningRate = 0.00005;
+	private static final double learningRate = 0.0005;
 	private static final int iterations = 1;
 	private static final int seed = 12345;
 
@@ -78,7 +78,7 @@ public class RecurrentNets {
                 .layer(2, new DenseLayer.Builder()
                 		.nIn(lstmLayer2Size)
                 		.nOut(denseLayerSize)
-                		.activation(Activation.RELU)
+                		.activation(Activation.LEAKYRELU)
                 		.build())
                 .layer(3, new RnnOutputLayer.Builder()
                         .nIn(denseLayerSize)
